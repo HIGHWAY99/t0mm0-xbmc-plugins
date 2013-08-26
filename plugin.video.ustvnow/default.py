@@ -16,10 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from resources.lib import Addon, ustvnow 
+from t0mm0.common.addon import Addon as _Addon
+#from resources.lib import Addon, ustvnow 
+from resources.lib import ustvnow 
 import sys
 import urllib
 import xbmc, xbmcgui, xbmcplugin
+
+Addon=_Addon('plugin.video.ustvnow', sys.argv)
 
 Addon.plugin_url = sys.argv[0]
 Addon.plugin_handle = int(sys.argv[1])
@@ -37,8 +41,8 @@ mode = Addon.plugin_queries['mode']
 
 if mode == 'main':
     Addon.log(mode)
-    Addon.add_directory({'mode': 'live'}, Addon.get_string(30001))
-    Addon.add_directory({'mode': 'recordings'}, Addon.get_string(30002))
+    Addon.add_directory({'mode': 'live'}, {'title':Addon.get_string(30001)})
+    Addon.add_directory({'mode': 'recordings'}, {'title':Addon.get_string(30002)})
 
 elif mode == 'live':
     Addon.log(mode)
@@ -46,11 +50,14 @@ elif mode == 'live':
     channels = ustv.get_channels(int(Addon.get_setting('quality')), 
                                      stream_type)
     for c in channels:
-        Addon.add_video_item(c['url'],
-                             {'title': '%s - %s' % (c['name'], 
-                                                    c['now']['title']),
-                              'plot': c['now']['plot']},
-                             img=c['icon'])
+        Addon.add_video_item({'url':c['url']},
+                             {'title': '%s - %s' % (c['name'],c['now']['title'])} )
+#        Addon.add_video_item(c['url'],
+#                             {'title': '%s - %s' % (c['name'], 
+#                                                    c['now']['title']),
+##                              'plot': c['now']['plot']})
+#                              'plot': c['now']['plot']},
+#                             img=c['icon'])
 
 elif mode == 'recordings':
     Addon.log(mode)

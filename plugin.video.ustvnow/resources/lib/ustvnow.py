@@ -15,11 +15,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
-import Addon
 import cookielib
 import os
 import re
 import urllib, urllib2
+
+#import Addon
+import sys
+from t0mm0.common.addon import Addon as _Addon
+Addon=_Addon('plugin.video.ustvnow', sys.argv)
+
+def build_query(queries):
+    return '&'.join([k+'='+urllib.quote(str(v)) for (k,v) in queries.items()])
 
 class Ustvnow:
     __BASE_URL = 'http://lv2.ustvnow.com'
@@ -77,7 +84,8 @@ class Ustvnow:
     
     def _build_url(self, path, queries={}):
         if queries:
-            query = Addon.build_query(queries)
+            #query = Addon.build_query(queries)
+            query = build_query(queries)
             return '%s/%s?%s' % (self.__BASE_URL, path, query) 
         else:
             return '%s/%s' % (self.__BASE_URL, path)
